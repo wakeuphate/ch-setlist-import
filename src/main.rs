@@ -50,14 +50,21 @@ fn main() {
 
     let setlist = fs::read_to_string(setlist).expect("Something went wrong reading the file");
 
+    println!("================");
     println!("Your Favourites:");
-    for (idx, fav_md5) in setlist.lines().enumerate() {
+    println!("================");
+    let mut found_count = 0;
+    for fav_md5 in setlist.lines() {
       for song in &chart_list {
         if song.hash == fav_md5 {
-          println!("{}: {} - {} (Charted by {})", idx+1, song.artist, song.name, song.charter);
+          found_count += 1;
+          println!("{}: {} - {} (Charted by {})", found_count, song.artist, song.name, song.charter);
         }
       }
     }
+    println!("================");
+    println!("{} song(s) found", found_count);
+    println!("================");
 }
 
 fn process_charts(charts_path: &str) -> Vec<Song> {
