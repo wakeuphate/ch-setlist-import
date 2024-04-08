@@ -9,5 +9,7 @@ authors = ["Markl"]
 [dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
 configparser = "3.0.4"
+encoding_rs = "0.8.33"
 globwalk = "0.9.1"
+indicatif = "0.17.8"
 md5 = "0.7.0"
