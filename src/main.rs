@@ -8,6 +8,7 @@ use indicatif::ProgressBar;
 use indicatif::ProgressStyle;
 use std::time::Duration;
 use std::error::Error;
+use std::collections::HashMap;
 
 // TODO: Accept & parse an actual .setlist file
 // TODO: Add some tests
@@ -52,20 +53,21 @@ fn main() {
     let charts_path = args.charts_path;
     let setlist = args.setlist;
     let chart_list: Vec<Song> = process_charts(&charts_path);
-
     let setlist = fs::read_to_string(setlist).expect("Something went wrong reading the file");
+    let mut song_map: HashMap<&str, Song> = HashMap::new();
+
+    for song in chart_list {
+      song_map.insert(&song.hash, song);
+    }
 
     println!("================");
     println!("Your Favourites:");
     println!("================");
     let mut found_count = 0;
     for fav_md5 in setlist.lines() {
-      for song in &chart_list {
-        if song.hash == fav_md5 {
-          found_count += 1;
-          println!("{}: {} - {} (Charted by {})", found_count, song.artist, song.name, song.charter);
-        }
-      }
+      if let Some(song) = song_map.get(fav_md5) {
+        found_count += 1;
+        println!("{}: {} - {} (Charted by {})", found_count, song.artist, song.name, song.charter);
     }
     println!("================");
     println!("{} song(s) found", found_count);
